@@ -41,3 +41,5 @@ Ip address needs to be sorted and unique.
 192.168.1.3,test3
 ```
 
+## Wiki(Japanese Only)
+https://github.com/kubotan/mod_ipmemo/wiki
