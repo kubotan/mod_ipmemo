@@ -1,6 +1,15 @@
 ## mod_ipmemo
  Apache module that gives memo to IP address in log file.
 
+## Require
+
+
+The following is necessary to compile.
+Please execute.
+```
+# yum install gcc httpd-devel
+```
+
 ## Compile
 
 To compile, execute the following command.
