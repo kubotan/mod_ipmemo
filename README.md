@@ -1,7 +1,17 @@
-# mod_ipmemo
+## mod_ipmemo
  Apache module that gives memo to IP address in log file.
 
-# build & add config in httpd.conf
- apxs -i -a -c mod_ipmemo.c
- service httpd restart
+## Compile
+
+To compile, execute the following command.
+```
+# apxs -i -a -c mod_ipmemo.c
+```
+
+## Reflect
+
+Please execute the following command to reflect it.
+```
+# service httpd restart
+```
 
