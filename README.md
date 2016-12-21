@@ -34,6 +34,7 @@ LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Memo
 ```
 
 Add Master csv file(/usr/local/data/mod_ipmemo/ip_memo.csv).
+Ip address needs to be sorted and unique.
 ```
 192.168.1.1,test1
 192.168.1.2,test2
