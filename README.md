@@ -1,5 +1,5 @@
-## mod_ipmemo
- Apache module that gives memo to IP address in log file.
+## mod_iptag
+ Apache module that gives tag to IP address in log file.
 
 ## Require
 
@@ -14,7 +14,7 @@ Please execute.
 
 To compile, execute the following command.
 ```
-# apxs -i -a -c mod_ipmemo.c
+# apxs -i -a -c mod_iptag.c
 ```
 
 ## Reflect
@@ -28,14 +28,14 @@ Please execute the following command to reflect it.
 
 Add the following the line to httpd.conf.
 ```
-LoadModule ipmemo_module      /usr/lib64/httpd/modules/mod_ipmemo.so
+LoadModule iptag_module      /usr/lib64/httpd/modules/mod_iptag.so
 
-LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Memo}i\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Tag}i\"" combined
 
-IpMemoFilePath   /usr/local/data/mod_ipmemo/ip_memo.csv
+IpTagFilePath   /usr/local/data/mod_iptag/ip_tag.csv
 ```
 
-Add Master csv file(/usr/local/data/mod_ipmemo/ip_memo.csv).
+Add Master csv file(/usr/local/data/mod_iptag/ip_tag.csv).
 Ip address needs to be sorted and unique.
 ```
 192.168.1.1,test1
@@ -44,4 +44,4 @@ Ip address needs to be sorted and unique.
 ```
 
 ## Wiki(Japanese Only)
-https://github.com/kubotan/mod_ipmemo/wiki
+https://github.com/kubotan/mod_iptag/wiki

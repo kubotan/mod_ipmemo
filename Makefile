@@ -25,11 +25,11 @@ install: install-modules-yes
 
 #   cleanup
 clean:
-	-rm -f mod_ipmemo.o mod_ipmemo.lo mod_ipmemo.slo mod_ipmemo.la 
+	-rm -f mod_iptag.o mod_iptag.lo mod_iptag.slo mod_iptag.la 
 
 #   simple test
 test: reload
-	lynx -mime_header http://localhost/ipmemo
+	lynx -mime_header http://localhost/iptag
 
 #   install and activate shared object by reloading Apache to
 #   force a reload of the shared object file
