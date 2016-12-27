@@ -66,6 +66,7 @@ static int iptag_handler(request_rec *r)
   if(result != NULL){
     long hit_index = result - ip_tag;
     apr_table_add(r->headers_in, "Tag", ip_tag[hit_index].tag);
+    apr_table_add(r->subprocess_env, "Tag", ip_tag[hit_index].tag);
   }
   return DECLINED;
 }
