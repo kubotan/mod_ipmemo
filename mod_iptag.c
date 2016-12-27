@@ -3,6 +3,8 @@
 /* apacheのインクルードファイル(apxsコマンドのテンプレ) */
 #include "httpd.h"
 #include "http_config.h"
+#include "http_core.h"
+#include "http_log.h"
 #include "http_protocol.h"
 #include "ap_config.h"
 
@@ -67,6 +69,7 @@ static int iptag_handler(request_rec *r)
     long hit_index = result - ip_tag;
     apr_table_add(r->headers_in, "Tag", ip_tag[hit_index].tag);
     apr_table_add(r->subprocess_env, "Tag", ip_tag[hit_index].tag);
+    apr_table_add(r->notes, "Tag", ip_tag[hit_index].tag);
   }
   return DECLINED;
 }
