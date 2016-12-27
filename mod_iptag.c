@@ -12,7 +12,7 @@
 /* IP_TAGの構造体 */
 typedef struct {
   int ip;                /* IPアドレス文字列から算出されたintを格納するための領域 */
-  char ip_address[15];   /* csvファイルからIPアドレス文字列を格納するための領域 */
+  char ip_address[16];   /* csvファイルからIPアドレス文字列を格納するための領域15+1byte(null) */
   char tag[BUFSIZE];    /* csvファイルからtag文字列を格納するための領域 */
 } IP_TAG_COLS;
 
