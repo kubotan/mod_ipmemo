@@ -67,9 +67,9 @@ static int iptag_handler(request_rec *r)
   result = (IP_TAG_COLS *)bsearch( &key, ip_tag, i, sizeof(IP_TAG_COLS), cmpsearch );
   if(result != NULL){
     long hit_index = result - ip_tag;
-    apr_table_add(r->headers_in, "Tag", ip_tag[hit_index].tag);
-    apr_table_add(r->subprocess_env, "Tag", ip_tag[hit_index].tag);
-    apr_table_add(r->notes, "Tag", ip_tag[hit_index].tag);
+    apr_table_add(r->headers_in, "TAG", ip_tag[hit_index].tag);
+    apr_table_add(r->subprocess_env, "TAG", ip_tag[hit_index].tag);
+    apr_table_add(r->notes, "TAG", ip_tag[hit_index].tag);
   }
   return DECLINED;
 }
@@ -81,7 +81,9 @@ static int iptag_handler(request_rec *r)
  ***************************************************/
 static void iptag_register_hooks(apr_pool_t *p)
 {
-  ap_hook_handler(iptag_handler, NULL, NULL, APR_HOOK_MIDDLE);
+  static const char *const beforeRun[] = {"mod_setenvif.c", "mod_rewrite.c", NULL};
+  ap_hook_header_parser(iptag_handler, NULL, beforeRun, APR_HOOK_FIRST);
+  ap_hook_handler(iptag_handler, NULL, beforeRun, APR_HOOK_MIDDLE);
 }
 
 /***************************************************
@@ -182,4 +184,3 @@ module AP_MODULE_DECLARE_DATA iptag_module = {
     read_cmds,             /* table of config file commands       */
     iptag_register_hooks   /* register hooks                      */
 };
-
