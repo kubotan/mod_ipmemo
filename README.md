@@ -28,10 +28,10 @@ Please execute the following command to reflect it.
 
 Add the following the line to httpd.conf.
 ```
-LoadModule iptag_module      /usr/lib64/httpd/modules/mod_iptag.so
-
-LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{Tag}i\"" combined
-
+LoadModule iptag_module modules/mod_iptag.so
+<IfModule mod_iptag.c>
+  LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" \"%{TAG}e\"" combined
+</IfModule>
 IpTagFilePath   /usr/local/data/mod_iptag/ip_tag.csv
 ```
 
