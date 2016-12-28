@@ -37,7 +37,7 @@ LoadModule iptag_module modules/mod_iptag.so
 ```
 
 Add Master csv file(/usr/local/data/mod_iptag/ip_tag.csv).
-Ip address needs to be sorted and unique.
+Ip address needs to be unique.
 ```
 192.168.1.1,test1
 192.168.1.2,test2
