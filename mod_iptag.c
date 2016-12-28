@@ -1,8 +1,10 @@
-#include <arpa/inet.h>   /* IPアドレスをintに変換するために使用 */
+#include <arpa/inet.h>   /* IPアドレスをlongに変換するために使用 */
 
 /* apacheのインクルードファイル(apxsコマンドのテンプレ) */
 #include "httpd.h"
 #include "http_config.h"
+#include "http_core.h"
+#include "http_log.h"
 #include "http_protocol.h"
 #include "ap_config.h"
 
@@ -11,9 +13,9 @@
 
 /* IP_TAGの構造体 */
 typedef struct {
-  int ip;                /* IPアドレス文字列から算出されたintを格納するための領域 */
+  long ip;               /* IPアドレス文字列から算出されたlongを格納するための領域 */
   char ip_address[16];   /* csvファイルからIPアドレス文字列を格納するための領域15+1byte(null) */
-  char tag[BUFSIZE];    /* csvファイルからtag文字列を格納するための領域 */
+  char tag[BUFSIZE];     /* csvファイルからtag文字列を格納するための領域 */
 } IP_TAG_COLS;
 
 /* IP_TAG設定格納用の構造体 */
@@ -59,15 +61,15 @@ static int iptag_handler(request_rec *r)
 
   qsort( ip_tag, i, sizeof(IP_TAG_COLS), cmpsort );
 
-  struct in_addr in_addr;
-  inet_aton(r->connection->remote_ip, &in_addr);
-  int key = in_addr.s_addr;
+  long key = inet_addr(r->connection->remote_ip);
 
   IP_TAG_COLS *result;
   result = (IP_TAG_COLS *)bsearch( &key, ip_tag, i, sizeof(IP_TAG_COLS), cmpsearch );
   if(result != NULL){
-    int hit_index = result - ip_tag;
-    apr_table_add(r->headers_in, "Tag", ip_tag[hit_index].tag);
+    long hit_index = result - ip_tag;
+    apr_table_add(r->headers_in, "TAG", ip_tag[hit_index].tag);
+    apr_table_add(r->subprocess_env, "TAG", ip_tag[hit_index].tag);
+    apr_table_add(r->notes, "TAG", ip_tag[hit_index].tag);
   }
   return DECLINED;
 }
@@ -79,7 +81,9 @@ static int iptag_handler(request_rec *r)
  ***************************************************/
 static void iptag_register_hooks(apr_pool_t *p)
 {
-  ap_hook_handler(iptag_handler, NULL, NULL, APR_HOOK_MIDDLE);
+  static const char *const beforeRun[] = {"mod_setenvif.c", "mod_rewrite.c", NULL};
+  ap_hook_header_parser(iptag_handler, NULL, beforeRun, APR_HOOK_FIRST);
+  ap_hook_handler(iptag_handler, NULL, beforeRun, APR_HOOK_MIDDLE);
 }
 
 /***************************************************
@@ -117,10 +121,16 @@ static int cmpsort(const void *c1, const void *c2)
   IP_TAG_COLS temp1 = *(IP_TAG_COLS *)c1;
   IP_TAG_COLS temp2 = *(IP_TAG_COLS *)c2;
 
-  int tmp1 = temp1.ip;
-  int tmp2 = temp2.ip;
+  long tmp1 = temp1.ip;
+  long tmp2 = temp2.ip;
 
-  return tmp1 - tmp2;
+  if(tmp1 > tmp2){
+    return  1;
+  }else if( tmp1 < tmp2 ){
+    return -1;
+  }else{
+    return  0;
+  }
 }
 
 /***************************************************
@@ -132,10 +142,17 @@ static int cmpsearch(const void *key, const void *c2)
 {
   IP_TAG_COLS line = *(IP_TAG_COLS *)c2;
 
-  int tmp1 = *(int *)key;
-  int tmp2 = line.ip;
+  long tmp1 = *(long *)key;
+  long tmp2 = line.ip;
 
-  return tmp1 - tmp2;
+
+  if(tmp1 > tmp2){
+    return  1;
+  }else if( tmp1 < tmp2 ){
+    return -1;
+  }else{
+    return  0;
+  }
 }
 
 /***************************************************
@@ -167,4 +184,3 @@ module AP_MODULE_DECLARE_DATA iptag_module = {
     read_cmds,             /* table of config file commands       */
     iptag_register_hooks   /* register hooks                      */
 };
-
